@@ -1,0 +1,130 @@
+spring:
+#  profiles:
+#    active: qa
+  datasource:
+    #url: jdbc:postgresql://localhost:5432/postgres
+    #username: rohan98
+    #password: rohan98
+    url: jdbc:mysql://db-rds-dev.cg6mtzrdu9a8.ap-south-1.rds.amazonaws.com:3306/efreightx_dev101
+    username: efreightx_dev101
+    password: efreightxdev@2021
+#    url: jdbc:mysql://localhost:3306/efreightxdev_050522
+#    username: root
+#    password: root
+
+  boot:
+    admin:
+      client:
+        url: [ http://localhost:8080 ]
+        username: "admin"
+        password: "admin123"
+        instance:
+          metadata:
+            tags:
+              environment: localhost
+  application:
+    name: fx-lookup-data-service
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: false
+        format_sql: false
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+  freemarker:
+    template-loader-path: classpath:/email-templates
+
+management:
+  endpoint:
+    logfile:
+      enabled: true
+      shutdown:
+        enabled: false
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+server:
+  servlet:
+    context-path: /efs-il
+  port: 9099
+
+springdoc:
+  swagger-ui:
+    operationsSorter: alpha
+    tagsSorter: alpha
+    groups-order: asc
+    disable-swagger-default-url: true
+    docUrl: http://localhost:9099/efs-il
+
+ses:
+  access_key: 'AKIA4Q7TQYJ3GX4S3O4B'
+  secret_key: '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'
+  mail_from: fx-postman@newage-global.com
+
+cloud:
+  aws:
+    region:
+      auto: false
+      static: ap-south-1
+    stack:
+      auto: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        stat: info
+        type:
+          descriptor:
+            sql: info
+  config: classpath:log4j2.xml
+  pattern: #  Set color log information
+    file: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+  file:
+    name: logs/fx-lookupdata.log
+    max-history: 7
+    max-size: 10MB
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout:  600000
+        readTimeout: 600000
+        loggerLevel: FULL
+    efs:
+      url: https://efreightsuite.com/
+    referencedata:
+      url: http://dev.efreightx.com/fx-referencedata
+    notification:
+      url: http://localhost:9010/fx-notification
+    tenants:
+      url: https://dev.efreightx.com/fx-multi-tenant-service
+
+
+
+content:
+  service:
+    url: http://13.127.166.178
+    security:
+      basicAuth:
+        username: admin
+        password: admin
+
+alfresco:
+  service:
+    deployment:
+      url:
+      path:
+    process:
+      storage:
+        url: http://13.127.166.178/
+        path:
